@@ -1,5 +1,4 @@
-FROM openjdk:18.0.1
-
+FROM openjdk:17
 ARG JAR_FILE=target/jira-1.0.jar
 
 WORKDIR /app

@@ -1,33 +1,15 @@
 services:
-  db1:
+  psql:
     image: postgres:latest
-    build:
-      context: ./
-    container_name: "jira_db"
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: "jira"
       POSTGRES_USER: "jira"
       POSTGRES_PASSWORD: "JiraRush"
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./src/main/resources/data4dev:/docker-entrypoint-initdb.d
-  db2:
-    image: postgres:latest
-    build:
-      context: ./
-    container_name: "jira-test_db"
-    environment:
-      POSTGRES_DB: "jira-test"
-      POSTGRES_USER: "jira"
-      POSTGRES_PASSWORD: "JiraRush"
-
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres-data:/var/lib/psql/data
-      - ./src/main/resources/data4test:/docker-entrypoint-initdb.d
+      - ./src/main/resources/db/changelog:/docker-entrypoint-initdb.d
 
   nginx:
     image: nginx:latest
@@ -43,10 +25,12 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SPRING_LIQUIBASE_CHANGELOG="classpath:db/changelog/changelog.sql"
+      - SPRING_LIQUIBASE_CHANGELOG=classpath:db/changelog/changelog.sql
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://psql:5432/jira
+      - SPRING_DATASOURCE_USERNAME=jira
+      - SPRING_DATASOURCE_PASSWORD=JiraRush
     depends_on:
-      - db1
-      - db2
+      - psql
       - nginx
     ports:
       - "8080:8080"
