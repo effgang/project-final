@@ -4,9 +4,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: "jira"
-      POSTGRES_USER: "jira"
-      POSTGRES_PASSWORD: "JiraRush"
+      POSTGRES_DB: ${DB_USERNAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./src/main/resources/db/changelog:/docker-entrypoint-initdb.d
@@ -27,8 +27,8 @@ services:
     environment:
       - SPRING_LIQUIBASE_CHANGELOG=classpath:db/changelog/changelog.sql
       - SPRING_DATASOURCE_URL=jdbc:postgresql://psql:5432/jira
-      - SPRING_DATASOURCE_USERNAME=jira
-      - SPRING_DATASOURCE_PASSWORD=JiraRush
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     depends_on:
       - psql
       - nginx
