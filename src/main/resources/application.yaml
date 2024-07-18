@@ -8,6 +8,9 @@ app:
     max-pool-size: 100
 
 spring:
+  messages:
+    encoding: utf-8
+    basename: messages
   init:
     mode: never
   jpa:
@@ -114,6 +117,7 @@ spring:
     username: ${mail.username}
     password: ${mail.password}
     port: 587
+
   thymeleaf.check-template-location: false
   thymeleaf:
     prefix: classpath:/resources/view/:classpath:/resources/mails/
